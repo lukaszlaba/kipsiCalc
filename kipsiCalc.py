@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import traceback
 
 import math
 
@@ -6,7 +7,7 @@ from strupy.units import*
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QGridLayout, QLayout, QLineEdit,
-        QSizePolicy, QToolButton, QWidget)
+        QSizePolicy, QToolButton, QWidget, QLabel, QTextBrowser, QTextEdit, QCheckBox, QComboBox)
 
 
 class Button(QToolButton):
@@ -28,10 +29,10 @@ def createButton(text, member):
     return button  
 
 unit_list = ['mm', 'cm','m', 'ft', 'inch']
-unit_list = ['mm2', 'cm2','m2', 'ft2', 'inch2']
-unit_list = ['mm3', 'cm3','m3', 'ft3', 'inch3']
-unit_list = ['N', 'kN','lbf', 'kip']
-unit_list = ['Pa', 'kPa','MPa', 'GPa', 'psi', 'ksi']
+unit_list += ['mm2', 'cm2','m2', 'ft2', 'inch2']
+#unit_list += ['mm3', 'cm3','m3', 'ft3', 'inch3']
+#unit_list += ['N', 'kN','lbf', 'kip']
+#unit_list += ['Pa', 'kPa','MPa', 'GPa', 'psi', 'ksi']
 
 
 class Calculator(QWidget):
@@ -57,6 +58,8 @@ class Calculator(QWidget):
         font.setPointSize(font.pointSize() + 2)
         self.display.setFont(font)
         
+        self.display.textChanged.connect(self.auto_calculate)
+        
         self.display_res = QLineEdit('')
         self.display_res.setReadOnly(True)
         self.display_res.setAlignment(Qt.AlignRight)
@@ -65,6 +68,22 @@ class Calculator(QWidget):
         font = self.display_res.font()
         font.setPointSize(font.pointSize() + 2)
         self.display_res.setFont(font)
+        
+        self.warnings = QLabel()
+        self.warnings.setText("Hello World")
+        self.warnings.setAlignment(Qt.AlignRight)
+        
+        
+        
+        self.autoCheckBox = QCheckBox('Auto calculate')
+        
+        self.add_to_reportButton = createButton("Add to report",self.add_to_report)
+        
+        self.unit_ComboBox = QComboBox()
+        
+        self.unit_ComboBox.currentIndexChanged.connect(self.user_unit_changed)
+        
+        self.textEditor = QTextEdit()
 
         self.digitButtons = []
         
@@ -81,7 +100,6 @@ class Calculator(QWidget):
         self.pointButton = createButton(".", self.basicClicked)
 
         self.backspaceButton = createButton("Backspace",self.backspaceClicked)
-        
         self.clearButton = createButton("Clear", self.clear)
 
         self.divisionButton = createButton("/",self.basicClicked)
@@ -98,12 +116,23 @@ class Calculator(QWidget):
         mainLayout = QGridLayout()
         mainLayout.setSizeConstraint(QLayout.SetFixedSize)
 
-        mainLayout.addWidget(self.display, 0, 0, 1, 6)
+        mainLayout.addWidget(self.display, 0, 0, 1, 10)
         
-        mainLayout.addWidget(self.display_res, 0, 6, 1, 10)
+        mainLayout.addWidget(self.display_res, 0, 11, 1, 8)
         
         mainLayout.addWidget(self.backspaceButton, 1, 0, 1, 2)
         mainLayout.addWidget(self.clearButton, 1, 2, 1, 2)
+        
+        mainLayout.addWidget(self.warnings, 1, 4, 1, 8)
+        
+        mainLayout.addWidget(self.textEditor, 11, 0, 1, 14)
+        
+        mainLayout.addWidget(self.autoCheckBox, 1, 16)
+        
+        mainLayout.addWidget(self.add_to_reportButton, 3, 16)
+        
+        mainLayout.addWidget(self.unit_ComboBox, 4, 16)
+        
 
 
         for i in range(1, Calculator.NumDigitButtons):
@@ -112,7 +141,8 @@ class Calculator(QWidget):
             mainLayout.addWidget(self.digitButtons[i], row, column)
             
 
-        for i in range(0, 4):
+        for i in range(0, len(unit_list)):
+            print(i)
             row = 10
             column = i
             mainLayout.addWidget(self.unitButtons[i], row, column)
@@ -139,11 +169,9 @@ class Calculator(QWidget):
         clickedButton = self.sender()
         content = clickedButton.text()
         self.display.setText(self.display.text() + content)
-        self.equalClicked()
         
     def equalClicked(self):
-        result = eval(self.display.text())
-        self.display_res.setText(str(result))
+        self.calculate()
 
     def backspaceClicked(self):
         text = self.display.text()[:-1]
@@ -152,8 +180,61 @@ class Calculator(QWidget):
     def clear(self):
         self.display.setText('')
 
+    def auto_calculate(self):
+        if self.autoCheckBox.isChecked():
+            self.calculate()
+            
     def calculate(self):
-        pass
+        expresion = self.display.text()
+        try:
+            self.result = eval(expresion)
+            self.display_res.setText(str(self.result))
+            self.warnings.setText('-')
+            
+        except Exception as e:
+            self.result = None
+            self.display_res.setText("CAN'T BE CALCULATED")
+            print (str(e))
+            print (str(traceback.format_exc()))
+            self.warnings.setText(str(e))
+        if not expresion:
+            self.display_res.setText("<<< WRITE SOME EXPRESION")
+            self.warnings.setText('-')
+        self.set_unit_list()
+        #report.setText('saass')
+        
+    def add_to_report(self):
+        expresion = self.display.text()
+        result = self.display_res.text()
+        record = expresion + ' = ' + result
+        calc.textEditor.toPlainText()
+        calc.textEditor.setText(calc.textEditor.toPlainText() + '\n' + record)
+    
+    def set_unit_list(self):
+        calc.unit_ComboBox.clear()
+        for unit in unit_list:
+                this_unit = eval(unit)
+                print (this_unit)
+                try:
+                    this_unit + self.result
+                    calc.unit_ComboBox.addItem(unit)
+                    print (unit, 'Added')
+                except:
+                    print (unit, 'Incorect')
+
+    def user_unit_changed(self):
+        try:
+            user_unit= eval(self.unit_ComboBox.currentText())
+            print (user_unit)
+            self.result = self.result.asUnit(user_unit)
+            self.display_res.setText(str(self.result))
+            
+        except:
+            pass
+                
+                
+
+            
 
 if __name__ == '__main__':
 
@@ -161,4 +242,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     calc = Calculator()
     calc.show()
+    calc.calculate()
     sys.exit(app.exec_())
