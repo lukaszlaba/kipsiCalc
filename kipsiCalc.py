@@ -33,7 +33,7 @@ unit_list += ['mm2', 'cm2','m2', 'ft2', 'inch2']
 unit_list += ['mm3', 'cm3','m3', 'ft3', 'inch3']
 unit_list += ['mm4', 'cm4','m4', 'inch4']
 unit_list += ['N', 'kN','lbf', 'kip']
-unit_list += ['Pa', 'kPa','MPa', 'GPa', 'psi', 'ksi']
+unit_list += ['Pa', 'kPa','MPa', 'GPa', 'psi', 'ksi', 'psf']
 
 user_used_units = []
 
