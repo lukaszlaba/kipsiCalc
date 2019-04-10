@@ -23,15 +23,89 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #!/usr/bin/env python
 import traceback
-
 import math
-
-from strupy.units import*
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QGridLayout, QLayout, QLineEdit,
         QSizePolicy, QToolButton, QWidget, QLabel, QTextBrowser, QTextEdit, QCheckBox, QComboBox)
 
+from unum import Unum as __Unum
+
+# Unum customization 
+__Unum.UNIT_SEP = '*'
+__Unum.UNIT_DIV_SEP = '/'
+__Unum.UNIT_FORMAT = '*%s'
+__Unum.VALUE_FORMAT = '%5.3f'
+#__Unum.VALUE_FORMAT ="%.9g"
+
+#---------------------------------------------------------------------
+# SI units
+from unum.units import m                       # [m] unit definition
+from unum.units import cm                      # [cm] unit definition
+from unum.units import mm                      # [mm] unit definition
+from unum.units import um                      # [um] unit definition
+from unum.units import kg                      # [kg] unit definition
+from unum.units import rad                     # [rad] unit definition
+from unum.units import deg                     # [deg] unit definition
+
+m2=m**2                                        # [m2] unit definition
+cm2=cm**2                                      # [cm2] unit definition
+mm2=mm**2                                      # [mm2] unit definition
+
+m3=m**3                                        # [m3] unit definition
+cm3=cm**3                                      # [cm3] unit definition
+mm3=mm**3                                      # [mm3] unit definition
+
+m4=m**4                                        # [m4] unit definition
+cm4=cm**4                                      # [cm4] unit definition
+mm4=mm**4                                      # [mm4] unit definition
+ 
+from unum.units import N                       # [N] unit definition
+kN = __Unum.unit('kN', 1E3 * N)                # [kN] unit definition
+
+Nm = __Unum.unit('Nm', N * m)                  # [Nm] unit definition
+kNm = __Unum.unit('kNm', 1E3 * N * m)          # [kNm] unit definition
+ 
+from unum.units import J                       # [J] unit definition
+
+from unum.units import Pa as Pa                # [Pa] unit definition
+kPa = __Unum.unit('kPa', 1E3 * Pa)             # [kPa] unit definition
+MPa = __Unum.unit('MPa', 1E6 * Pa)             # [MPa] unit definition
+GPa = __Unum.unit('GPa', 1E9 * Pa)             # [MPa] unit definition
+
+from unum.units import s                       # [s] unit definition
+
+#---------------------------------------------------------------------
+#Imperial units
+
+inch = __Unum.unit('inch', 0.0254 * m)          # [in] unit definition
+ft = __Unum.unit('ft', 12. * inch)              # [ft] unit definition
+yd = __Unum.unit('yd', 3. * ft)                 # [yd] unit definition
+
+inch2 = inch**2                                 # [inch2] unit definition
+ft2 = ft**2                                     # [ft2] unit definition
+yd2 = yd**2                                     # [yrd2] unit definition
+                
+inch3 = inch**3                                 # [inch3] unit definition
+ft3 = ft**3                                     # [ft3] unit definition
+
+inch4 = inch**4                                 # [inch4] unit definition
+
+lb = __Unum.unit('lb', 0.45359237 * kg)         # [lb] unit definition
+lbf = __Unum.unit('lbf', 4.4482216152605 * N)   # [lbf] unit definition
+kip = __Unum.unit('kip', 1E3 * lbf)             # [kip] unit definition
+
+lbfinch = __Unum.unit('lbfinch', lbf * inch)    # [lbfinch] unit definition
+lbfft = __Unum.unit('lbfft', lbf * ft)          # [lbfft] unit definition
+kipft = __Unum.unit('kipft', kip * ft)          # [kipft] unit definition
+kipinch = __Unum.unit('kipinch', kip * inch)    # [kipinch] unit definition
+
+psi = __Unum.unit('psi', lbf / inch2)           # [psi] unit definition
+ksi = __Unum.unit('ksi', 1E3 * psi)             # [ksi] unit definition
+psf = __Unum.unit('psf', lbf / ft2)             # [psf] unit definition
+ksf = __Unum.unit('ksf', 1E3 * psf)             # [ksf] unit definition
+
+#---------------------------------------------------------------------
 
 class Button(QToolButton):
     def __init__(self, text, parent=None):
@@ -51,12 +125,19 @@ def createButton(text, member):
     button.clicked.connect(member)
     return button  
 
-unit_list = ['mm', 'cm','m', 'ft', 'inch']
-unit_list += ['mm2', 'cm2','m2', 'ft2', 'inch2']
+#---------------------------------------------------------------------
+
+unit_list = ['kg', 'lb']
+unit_list += ['um', 'mm', 'cm','m', 'ft', 'inch', 'yd']
+unit_list += ['mm2', 'cm2','m2', 'ft2', 'inch2', 'yd2']
 unit_list += ['mm3', 'cm3','m3', 'ft3', 'inch3']
 unit_list += ['mm4', 'cm4','m4', 'inch4']
 unit_list += ['N', 'kN','lbf', 'kip']
-unit_list += ['Pa', 'kPa','MPa', 'GPa', 'psi', 'ksi', 'psf']
+unit_list += ['Nm', 'kNm','lbfinch', 'lbfft', 'kipft', 'kipinch']
+unit_list += ['Pa', 'kPa','MPa', 'GPa', 'psi', 'ksi', 'psf', 'ksf']
+unit_list += ['kN/m', 'kN/cm', 'kip/inch']
+unit_list += ['kN/m3', 'kN/cm3', 'kip/inch3']
+unit_list += ['deg', 'rad']
 
 user_used_units = []
 
@@ -156,7 +237,14 @@ class Calculator(QWidget):
         self.setLayout(mainLayout)
         
         #-------------
-        self.display.setWindowTitle("kipsiCalc")     
+        self.display.setWindowTitle("kipsiCalc")  
+    
+    @property
+    def result_string(self):
+        result_string = str(self.result).replace(' ','')
+        if result_string.endswith('*'):
+            result_string = result_string[:-1]
+        return result_string
 
     def basicClicked(self):
         clickedButton = self.sender()
@@ -198,7 +286,7 @@ class Calculator(QWidget):
         expresion = self.decode(expresion)
         try:
             self.result = eval(expresion) * m/m
-            self.display_res.setText(str(self.result))
+            self.display_res.setText(self.result_string)
             self.warnings.setText('-')
             
         except Exception as e:
@@ -257,7 +345,7 @@ class Calculator(QWidget):
                 user_unit= eval(unit_string)
                 print (user_unit)
                 self.result = self.result.asUnit(user_unit)
-                self.display_res.setText(str(self.result))
+                self.display_res.setText(self.result_string)
                 self.add_to_used(unit_string)
             except:
                 pass
