@@ -1,3 +1,26 @@
+'''
+--------------------------------------------------------------------------
+Copyright (C) 2016-2017 Lukasz Laba <lukaszlab@o2.pl>
+
+This file is part of ksipsiCalc.
+ksipsiCalc - simple calculator supporting unit calculations.
+
+ksipsiCalc is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+ksipsiCalc is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ksipsiCalc; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+--------------------------------------------------------------------------
+'''
+
 #!/usr/bin/env python
 import traceback
 
@@ -37,9 +60,6 @@ unit_list += ['Pa', 'kPa','MPa', 'GPa', 'psi', 'ksi', 'psf']
 
 user_used_units = []
 
-
-
-
 class Calculator(QWidget):
     NumDigitButtons = 10
     
@@ -70,6 +90,7 @@ class Calculator(QWidget):
         self.warnings.setAlignment(Qt.AlignRight)
         
         self.autoCheckBox = QCheckBox('Auto calculate')
+        self.errorCheckBox = QCheckBox('Show error massage')
         self.add_to_reportButton = createButton("Add to report",self.add_to_report)
         self.unit_ComboBox = QComboBox()
         self.unit_ComboBox.currentIndexChanged.connect(self.user_unit_changed)
@@ -92,7 +113,7 @@ class Calculator(QWidget):
         self.timesButton = createButton(" * ",self.basicClicked)
         self.minusButton = createButton(" - ", self.basicClicked)
         self.plusButton = createButton(" + ", self.basicClicked)
-        self.squareRootButton = createButton("**",self.basicClicked)
+        self.squareRootButton = createButton("^",self.basicClicked)
         self.brackedopenButton = createButton("(",self.basicClicked)
         self.brackedcloseButton = createButton(")",self.basicClicked)
         self.equalButton = createButton("=", self.equalClicked)
@@ -107,6 +128,7 @@ class Calculator(QWidget):
         mainLayout.addWidget(self.warnings, 1, 4, 1, 8)
         mainLayout.addWidget(self.textEditor, 11, 0, 1, 14)
         mainLayout.addWidget(self.autoCheckBox, 1, 16)
+        mainLayout.addWidget(self.errorCheckBox, 2, 16)
         mainLayout.addWidget(self.add_to_reportButton, 3, 16)
         mainLayout.addWidget(self.unit_ComboBox, 4, 16)
         
@@ -151,13 +173,10 @@ class Calculator(QWidget):
         
         clickedButton = self.sender()
         
-        if last_sing_in_curent_expresion in ['+', '-', '/', '*', None]:
+        if last_sing_in_curent_expresion in ['+', '-', '/', '*', '(', ')', None]:
             content = clickedButton.text()
         else:
             content = '*' + clickedButton.text()
-        
-        
-        
         self.display.setText(self.display.text() + content)
 
     def equalClicked(self):
@@ -176,6 +195,7 @@ class Calculator(QWidget):
             
     def calculate(self):
         expresion = self.display.text()
+        expresion = self.decode(expresion)
         try:
             self.result = eval(expresion) * m/m
             self.display_res.setText(str(self.result))
@@ -183,15 +203,21 @@ class Calculator(QWidget):
             
         except Exception as e:
             self.result = None
-            self.display_res.setText("CAN'T BE CALCULATED")
+            self.display_res.setText("ERROR")
             print (str(e))
             print (str(traceback.format_exc()))
-            self.warnings.setText(str(e))
+            if self.errorCheckBox.isChecked():
+                self.warnings.setText(str(e))
         if not expresion:
-            self.display_res.setText("<<< WRITE SOME EXPRESION")
-            self.warnings.setText('-')
+            self.display_res.setText("0")
+            if self.errorCheckBox.isChecked():
+                self.warnings.setText('-')
         self.set_unit_list()
-        #report.setText('saass')
+        
+        
+    def decode(self, expreson):
+        expreson = expreson.replace('^', '**')
+        return expreson 
         
     def add_to_report(self):
         expresion = self.display.text()
@@ -204,19 +230,24 @@ class Calculator(QWidget):
         self.block = True
         calc.unit_ComboBox.clear()
         default = None
+        native = None
         for unit in unit_list:
                 this_unit = eval(unit)
                 try:
                     this_unit + self.result
                     calc.unit_ComboBox.addItem(unit)
                     if unit in user_used_units:
-                        print (unit, 'default', user_used_units)
                         default = unit
+                    print (self.result.asUnit(this_unit).asNumber())
+                    if self.result.asNumber() == self.result/this_unit:
+                        native = unit
+                        print ('native', unit )
                 except:
                     pass
+        calc.unit_ComboBox.setCurrentIndex(calc.unit_ComboBox.findText(native))
         self.block = False
-        calc.unit_ComboBox.setCurrentIndex(calc.unit_ComboBox.findText(default))
-        self.user_unit_changed()
+        if default:
+            calc.unit_ComboBox.setCurrentIndex(calc.unit_ComboBox.findText(default))
         
     def user_unit_changed(self):
         print ('calll', self.block)
@@ -250,6 +281,12 @@ if __name__ == '__main__':
     import sys
     app = QApplication(sys.argv)
     calc = Calculator()
-    calc.show()
+    calc.autoCheckBox.setChecked(True)
     calc.calculate()
+    calc.show()
     sys.exit(app.exec_())
+    
+'''
+command used to frozening with pyinstaller
+pyinstaller --onefile --noconsole --icon=app.ico ...\kipsiCalc.py
+'''
