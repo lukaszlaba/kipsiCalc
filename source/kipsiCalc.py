@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import traceback
 import math
 
+from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QGridLayout, QLayout, QLineEdit,
         QSizePolicy, QToolButton, QWidget, QLabel, QTextBrowser, QTextEdit, QCheckBox, QComboBox)
@@ -110,13 +111,12 @@ ksf = __Unum.unit('ksf', 1E3 * psf)             # [ksf] unit definition
 class Button(QToolButton):
     def __init__(self, text, parent=None):
         super(Button, self).__init__(parent)
-
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         self.setText(text)
 
     def sizeHint(self):
         size = super(Button, self).sizeHint()
-        size.setHeight(size.height() + 1)
+        size.setHeight(size.height() + 15)
         size.setWidth(max(size.width(), size.height()))
         return size
         
@@ -135,9 +135,42 @@ unit_list += ['mm4', 'cm4','m4', 'inch4']
 unit_list += ['N', 'kN','lbf', 'kip']
 unit_list += ['Nm', 'kNm','lbfinch', 'lbfft', 'kipft', 'kipinch']
 unit_list += ['Pa', 'kPa','MPa', 'GPa', 'psi', 'ksi', 'psf', 'ksf']
-unit_list += ['kN/m', 'kN/cm', 'kip/inch']
-unit_list += ['kN/m3', 'kN/cm3', 'kip/inch3']
-unit_list += ['deg', 'rad']
+unit_list += ['kN/m', 'kN/cm', 'kip/inch', 'kip/ft']
+unit_list += ['kN/m3', 'kN/cm3', 'kip/inch3', 'kip/ft3']
+
+def are_the_same_unit(val1, val2):
+    try:
+        val1 + val2
+        return True
+    except:
+        return False
+
+def unit_color(val):
+    if are_the_same_unit(val, kg):
+        colour = "background-color: rgb(245,197,188)"
+    elif are_the_same_unit(val, m):
+        colour = "background-color: rgb(194,238,240)"
+    elif are_the_same_unit(val, m2):
+        colour = "background-color: rgb(124,219,222)"
+    elif are_the_same_unit(val, m3):
+        colour = "background-color: rgb(47,183,188)"
+    elif are_the_same_unit(val, m4):
+        colour = "background-color: rgb(147,200,178)"
+    elif are_the_same_unit(val, N):
+        colour = "background-color: rgb(186,246,152)"
+    elif are_the_same_unit(val, Nm):
+        colour = "background-color: rgb(217,73,233)"
+    elif are_the_same_unit(val, Pa):
+        colour = "background-color: rgb(169,161,222)"
+    elif are_the_same_unit(val, N/m):
+        colour = "background-color: rgb(236,147,187)"
+    elif are_the_same_unit(val, N/m3):
+        colour = "background-color: rgb(235,217,117)"
+    else:
+        colour = "background-color: rgb(0,0,0)"
+    return colour
+    
+
 
 user_used_units = []
 
@@ -154,7 +187,7 @@ class Calculator(QWidget):
         self.display.setAlignment(Qt.AlignRight)
         #self.display.setMaxLength(8)
         font = self.display.font()
-        font.setPointSize(font.pointSize() + 2)
+        font.setPointSize(font.pointSize() + 4)
         self.display.setFont(font)
         self.display.textChanged.connect(self.auto_calculate)
         
@@ -163,15 +196,15 @@ class Calculator(QWidget):
         self.display_res.setAlignment(Qt.AlignRight)
         #self.display_res.setMaxLength(8)
         font = self.display_res.font()
-        font.setPointSize(font.pointSize() + 2)
+        font.setPointSize(font.pointSize() + 4)
         self.display_res.setFont(font)
         
         self.warnings = QLabel()
-        self.warnings.setText("Hello World")
+        self.warnings.setText("-")
         self.warnings.setAlignment(Qt.AlignRight)
         
-        self.autoCheckBox = QCheckBox('Auto calculate')
-        self.errorCheckBox = QCheckBox('Show error massage')
+        self.autoCheckBox = QCheckBox('Autocalc')
+        self.errorCheckBox = QCheckBox('Error msg')
         self.add_to_reportButton = createButton("Add to report",self.add_to_report)
         self.unit_ComboBox = QComboBox()
         self.unit_ComboBox.currentIndexChanged.connect(self.user_unit_changed)
@@ -187,9 +220,10 @@ class Calculator(QWidget):
             self.unitButtons.append(createButton(str(i),
                     self.unitClicked))
 
+        self.eButton = createButton("E", self.basicClicked)
         self.pointButton = createButton(".", self.basicClicked)
-        self.backspaceButton = createButton("Backspace",self.backspaceClicked)
-        self.clearButton = createButton("Clear", self.clear)
+        self.deleteButton = createButton("DEL",self.backspaceClicked)
+        self.clearButton = createButton("C", self.clear)
         self.divisionButton = createButton(" / ",self.basicClicked)
         self.timesButton = createButton(" * ",self.basicClicked)
         self.minusButton = createButton(" - ", self.basicClicked)
@@ -199,45 +233,68 @@ class Calculator(QWidget):
         self.brackedcloseButton = createButton(")",self.basicClicked)
         self.equalButton = createButton("=", self.equalClicked)
 
+
         #--------------app layout
         mainLayout = QGridLayout()
         mainLayout.setSizeConstraint(QLayout.SetFixedSize)
         mainLayout.addWidget(self.display, 0, 0, 1, 10)
-        mainLayout.addWidget(self.display_res, 0, 11, 1, 8)
-        mainLayout.addWidget(self.backspaceButton, 1, 0, 1, 2)
-        mainLayout.addWidget(self.clearButton, 1, 2, 1, 2)
-        mainLayout.addWidget(self.warnings, 1, 4, 1, 8)
-        mainLayout.addWidget(self.textEditor, 11, 0, 1, 14)
-        mainLayout.addWidget(self.autoCheckBox, 1, 16)
-        mainLayout.addWidget(self.errorCheckBox, 2, 16)
-        mainLayout.addWidget(self.add_to_reportButton, 3, 16)
-        mainLayout.addWidget(self.unit_ComboBox, 4, 16)
+        mainLayout.addWidget(self.display_res, 0, 10, 1, 8)
+        mainLayout.addWidget(self.unit_ComboBox, 1, 17)
         
-        for i in range(1, Calculator.NumDigitButtons):
+
+        
+        
+        mainLayout.addWidget(self.warnings, 1, 0, 1, 10)
+
+        mainLayout.addWidget(self.autoCheckBox, 3, 17)
+        mainLayout.addWidget(self.errorCheckBox, 4, 17)
+        mainLayout.addWidget(self.add_to_reportButton, 5, 17)
+        
+        
+
+                
+        #--numpad
+        startcol = 0
+        startrow = 3
+        mainLayout.addWidget(self.deleteButton, 0 + startrow, 0 + startcol, 1, 2)
+        mainLayout.addWidget(self.clearButton, 0 + startrow, 2 + startcol, 1, 2)
+        for i in range(1, Calculator.NumDigitButtons): # 1-9
             row = ((9 - i) / 3) + 2
-            column = ((i - 1) % 3) + 1
-            mainLayout.addWidget(self.digitButtons[i], row, column)
+            column = ((i - 1) % 3) + 0
+            mainLayout.addWidget(self.digitButtons[i], row + startrow, column + startcol)
+        mainLayout.addWidget(self.digitButtons[0], 5 + startrow, 0 + startcol)    # 0
+        mainLayout.addWidget(self.pointButton, 5 + startrow, 1 + startcol)        # .
+        mainLayout.addWidget(self.eButton, 5 + startrow, 2 + startcol)            # e
+        mainLayout.addWidget(self.divisionButton, 1 + startrow, 0 + startcol, 1, 2)     # /
+        mainLayout.addWidget(self.timesButton, 1 + startrow, 2 + startcol)        # *
+        mainLayout.addWidget(self.minusButton, 1 + startrow, 3 + startcol)        # -
+        mainLayout.addWidget(self.plusButton, 2 + startrow, 3 + startcol)         # +
+        mainLayout.addWidget(self.squareRootButton, 3 + startrow, 3 + startcol)   # ^
+        mainLayout.addWidget(self.brackedopenButton, 4 + startrow, 3 + startcol)  # (
+        mainLayout.addWidget(self.brackedcloseButton, 5 + startrow, 3 + startcol) # )
+        mainLayout.addWidget(self.equalButton, 6 + startrow, 0 + startcol, 1, 4)  # =
+        
+        #--units
+        startcol = 5
+        startrow = 3
+
+        row = startrow
+        column = startcol
 
         for i in range(0, len(unit_list)):
-            print(i)
-            row = 10
-            column = i
-            mainLayout.addWidget(self.unitButtons[i], row, column)
+            row = i / 7
+            column = i  % 7
+            mainLayout.addWidget(self.unitButtons[i], row + startrow, column + startcol)
+            self.unitButtons[i].setStyleSheet( unit_color(eval(unit_list[i])))
 
-        mainLayout.addWidget(self.digitButtons[0], 5, 1)
-        mainLayout.addWidget(self.pointButton, 5, 2)
-        mainLayout.addWidget(self.divisionButton, 2, 4)
-        mainLayout.addWidget(self.timesButton, 3, 4)
-        mainLayout.addWidget(self.minusButton, 4, 4)
-        mainLayout.addWidget(self.plusButton, 5, 4)
-        mainLayout.addWidget(self.squareRootButton, 2, 5)
-        mainLayout.addWidget(self.brackedopenButton, 5, 8)
-        mainLayout.addWidget(self.brackedcloseButton, 5, 9)
-        mainLayout.addWidget(self.equalButton, 5, 5)
+
+        mainLayout.addWidget(self.textEditor, 20, 0, 1, 18)        
+        
         self.setLayout(mainLayout)
         
         #-------------
-        self.display.setWindowTitle("kipsiCalc")  
+        self.setWindowTitle("kipsiCalc 0.0.2 - simple calculator supporting unit calculations")
+        self.setWindowIcon(QtGui.QIcon('app.ico'))
     
     @property
     def result_string(self):
@@ -371,6 +428,7 @@ if __name__ == '__main__':
     calc = Calculator()
     calc.autoCheckBox.setChecked(True)
     calc.calculate()
+    calc.textEditor.setText('Here you can write simple report. Us the |Add to report| botton to get results here. Enjoy!')
     calc.show()
     sys.exit(app.exec_())
     
