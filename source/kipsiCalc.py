@@ -63,17 +63,22 @@ __Unum.VALUE_FORMAT = '%5.3f'
 
 #---------------------------------------------------------------------
 # SI units
+from unum.units import s
+from unum.units import h
+from unum.units import km                      # [km] unit definition
+from unum.units import mile                    # [mile] unit definition
 from unum.units import m                       # [m] unit definition
 from unum.units import cm                      # [cm] unit definition
 from unum.units import mm                      # [mm] unit definition
 from unum.units import um                      # [um] unit definition
 from unum.units import kg                      # [kg] unit definition
-from unum.units import rad                     # [rad] unit definition
-from unum.units import deg                     # [deg] unit definition
+from unum.units import t                       # [t] unit definition
+
 
 m2=m**2                                        # [m2] unit definition
 cm2=cm**2                                      # [cm2] unit definition
 mm2=mm**2                                      # [mm2] unit definition
+from unum.units import ha                      # [ha] unit definition
 
 m3=m**3                                        # [m3] unit definition
 cm3=cm**3                                      # [cm3] unit definition
@@ -92,6 +97,7 @@ kNm = __Unum.unit('kNm', 1E3 * N * m)          # [kNm] unit definition
 from unum.units import J                       # [J] unit definition
 
 from unum.units import Pa as Pa                # [Pa] unit definition
+from unum.units import bar                     # [bar] unit definition
 kPa = __Unum.unit('kPa', 1E3 * Pa)             # [kPa] unit definition
 MPa = __Unum.unit('MPa', 1E6 * Pa)             # [MPa] unit definition
 GPa = __Unum.unit('GPa', 1E9 * Pa)             # [MPa] unit definition
@@ -113,6 +119,7 @@ inch3 = inch**3                                 # [inch3] unit definition
 ft3 = ft**3                                     # [ft3] unit definition
 
 inch4 = inch**4                                 # [inch4] unit definition
+ft4 = ft**4                                     # [inch4] unit definition
 
 lb = __Unum.unit('lb', 0.45359237 * kg)         # [lb] unit definition
 lbf = __Unum.unit('lbf', 4.4482216152605 * N)   # [lbf] unit definition
@@ -149,16 +156,17 @@ def createButton(text, member):
 
 #---------------------------------------------------------------------
 
-unit_list = ['kg', 'lb']
-unit_list += ['um', 'mm', 'cm','m', 'ft', 'inch', 'yd']
-unit_list += ['mm2', 'cm2','m2', 'ft2', 'inch2', 'yd2']
+unit_list = ['kg', 't', 'lb']
+unit_list += ['um', 'mm', 'cm','m', 'mile', 'km', 'ft', 'inch', 'yd']
+unit_list += ['mm2', 'cm2','m2', 'ha', 'ft2', 'inch2', 'yd2']
 unit_list += ['mm3', 'cm3','m3', 'ft3', 'inch3']
-unit_list += ['mm4', 'cm4','m4', 'inch4']
+unit_list += ['mm4', 'cm4','m4', 'inch4', 'ft4']
 unit_list += ['N', 'kN','lbf', 'kip']
 unit_list += ['Nm', 'kNm','lbfinch', 'lbfft', 'kipft', 'kipinch']
-unit_list += ['Pa', 'kN/m2', 'kPa','MPa', 'GPa', 'psi', 'ksi', 'psf', 'ksf']
+unit_list += ['Pa', 'kN/m2', 'kPa','MPa', 'bar', 'GPa', 'psi', 'ksi', 'psf', 'ksf']
 unit_list += ['kN/m', 'kN/cm', 'kip/inch', 'kip/ft']
 unit_list += ['kN/m3', 'kN/cm3', 'kip/inch3', 'kip/ft3']
+unit_list += ['s', 'h']
 
 def are_the_same_unit(val1, val2):
     try:
@@ -189,7 +197,7 @@ def unit_color(val):
     elif are_the_same_unit(val, N/m3):
         colour = "background-color: rgb(235,217,117)"
     else:
-        colour = "background-color: rgb(0,0,0)"
+        colour = "background-color: rgb(200,200,200)"
     return colour
     
 user_used_units = ['kg', 'm','m2', 'm3', 'm4', 'kN', 'kNm', 'kPa', 'kN/m', 'kN/m3']
