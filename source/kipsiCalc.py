@@ -26,11 +26,33 @@ import traceback
 import math
 
 from PyQt5 import QtGui
+from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QGridLayout, QLayout, QLineEdit,
         QSizePolicy, QToolButton, QWidget, QLabel, QTextBrowser, QTextEdit, QCheckBox, QComboBox)
 
 from unum import Unum as __Unum
+
+version = '0.1 (beta)'
+
+appname = 'kipsiCalc'
+
+about = '''
+Copyright (C) 2019 Łukasz Laba (e-mail : lukaszlab@o2.pl)
+
+-------------Licence-------------
+ksipsiCalc is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+            
+ksipsiCalc is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+            
+You should have received a copy of the GNU General Public License along with Foobar; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA.
+            
+-------------Project info-------------
+https://github.com/lukaszlaba/kipsiCalc
+
+-------------Contact-------------
+lukaszlab@o2.pl
+'''
 
 # Unum customization 
 __Unum.UNIT_SEP = '*'
@@ -134,7 +156,7 @@ unit_list += ['mm3', 'cm3','m3', 'ft3', 'inch3']
 unit_list += ['mm4', 'cm4','m4', 'inch4']
 unit_list += ['N', 'kN','lbf', 'kip']
 unit_list += ['Nm', 'kNm','lbfinch', 'lbfft', 'kipft', 'kipinch']
-unit_list += ['Pa', 'kPa','MPa', 'GPa', 'psi', 'ksi', 'psf', 'ksf']
+unit_list += ['Pa', 'kN/m2', 'kPa','MPa', 'GPa', 'psi', 'ksi', 'psf', 'ksf']
 unit_list += ['kN/m', 'kN/cm', 'kip/inch', 'kip/ft']
 unit_list += ['kN/m3', 'kN/cm3', 'kip/inch3', 'kip/ft3']
 
@@ -170,9 +192,9 @@ def unit_color(val):
         colour = "background-color: rgb(0,0,0)"
     return colour
     
+user_used_units = ['kg', 'm','m2', 'm3', 'm4', 'kN', 'kNm', 'kPa', 'kN/m', 'kN/m3']
 
-
-user_used_units = []
+#---------------------------------------------------------------------
 
 class Calculator(QWidget):
     NumDigitButtons = 10
@@ -185,7 +207,6 @@ class Calculator(QWidget):
         self.display = QLineEdit('')
         self.display.setReadOnly(False)
         self.display.setAlignment(Qt.AlignRight)
-        #self.display.setMaxLength(8)
         font = self.display.font()
         font.setPointSize(font.pointSize() + 4)
         self.display.setFont(font)
@@ -194,7 +215,6 @@ class Calculator(QWidget):
         self.display_res = QLineEdit('')
         self.display_res.setReadOnly(True)
         self.display_res.setAlignment(Qt.AlignRight)
-        #self.display_res.setMaxLength(8)
         font = self.display_res.font()
         font.setPointSize(font.pointSize() + 4)
         self.display_res.setFont(font)
@@ -232,7 +252,7 @@ class Calculator(QWidget):
         self.brackedopenButton = createButton("(",self.basicClicked)
         self.brackedcloseButton = createButton(")",self.basicClicked)
         self.equalButton = createButton("=", self.equalClicked)
-
+        self.infoButton = createButton("App Info", self.info)
 
         #--------------app layout
         mainLayout = QGridLayout()
@@ -241,18 +261,11 @@ class Calculator(QWidget):
         mainLayout.addWidget(self.display_res, 0, 10, 1, 8)
         mainLayout.addWidget(self.unit_ComboBox, 1, 17)
         
-
-        
-        
         mainLayout.addWidget(self.warnings, 1, 0, 1, 10)
-
         mainLayout.addWidget(self.autoCheckBox, 3, 17)
         mainLayout.addWidget(self.errorCheckBox, 4, 17)
         mainLayout.addWidget(self.add_to_reportButton, 5, 17)
         
-        
-
-                
         #--numpad
         startcol = 0
         startrow = 3
@@ -286,14 +299,16 @@ class Calculator(QWidget):
             column = i  % 7
             mainLayout.addWidget(self.unitButtons[i], row + startrow, column + startcol)
             self.unitButtons[i].setStyleSheet( unit_color(eval(unit_list[i])))
+            
+        #---info
+        mainLayout.addWidget(self.infoButton, 7, 17)
 
-
+        #---text editor
         mainLayout.addWidget(self.textEditor, 20, 0, 1, 18)        
-        
+        #-------------        
         self.setLayout(mainLayout)
-        
         #-------------
-        self.setWindowTitle("kipsiCalc 0.0.2 - simple calculator supporting unit calculations")
+        self.setWindowTitle("%s %s - simple calculator supporting unit calculations"%(appname, version))
         self.setWindowIcon(QtGui.QIcon('app.ico'))
     
     @property
@@ -313,11 +328,7 @@ class Calculator(QWidget):
             last_sing_in_curent_expresion = self.display.text().replace(' ', '')[-1]
         except:
             last_sing_in_curent_expresion = None
-            
-        print (last_sing_in_curent_expresion)
-        
         clickedButton = self.sender()
-        
         if last_sing_in_curent_expresion in ['+', '-', '/', '*', '(', ')', None]:
             content = clickedButton.text()
         else:
@@ -345,7 +356,6 @@ class Calculator(QWidget):
             self.result = eval(expresion) * m/m
             self.display_res.setText(self.result_string)
             self.warnings.setText('-')
-            
         except Exception as e:
             self.result = None
             self.display_res.setText("ERROR")
@@ -358,7 +368,6 @@ class Calculator(QWidget):
             if self.errorCheckBox.isChecked():
                 self.warnings.setText('-')
         self.set_unit_list()
-        
         
     def decode(self, expreson):
         expreson = expreson.replace('^', '**')
@@ -421,6 +430,9 @@ class Calculator(QWidget):
                 pass
         if not already_exist:
             user_used_units.append(unit)
+
+    def info(self):
+        QMessageBox.about(self, "App Info", about)
 
 if __name__ == '__main__':
     import sys
