@@ -39,14 +39,14 @@ from units_description import unit_description
 #---------------------------------------------------------------------
 
 unit_list = ['kg', 't', 'lb']
-unit_list += ['um', 'mm', 'cm','m', 'mile', 'km', 'ft', 'inch', 'yd']
+unit_list += ['um', 'mm', 'cm', 'dm', 'm', 'km', 'ft', 'inch', 'yd', 'mile']
 unit_list += ['mm2', 'cm2','m2', 'ha', 'ft2', 'inch2', 'yd2']
-unit_list += ['mm3', 'cm3','m3', 'ft3', 'inch3']
+unit_list += ['mm3', 'cm3', 'dm3','m3', 'ft3', 'inch3']
 unit_list += ['mm4', 'cm4','m4', 'inch4', 'ft4']
 unit_list += ['N', 'kN','lbf', 'kip']
 unit_list += ['Nm', 'kNm','lbfinch', 'lbfft', 'kipft', 'kipinch']
 unit_list += ['Pa', 'kN/m2', 'kPa','MPa', 'bar', 'GPa', 'psi', 'ksi', 'psf', 'ksf']
-unit_list += ['kN/m', 'kN/cm', 'kip/inch', 'kip/ft']
+unit_list += ['kN/m', 'kN/cm', 'kip/inch', 'lbf/ft', 'plf', 'kip/ft']
 unit_list += ['kN/m3', 'kN/cm3', 'kip/inch3', 'kip/ft3']
 unit_list += ['s', 'h']
 

@@ -38,6 +38,7 @@ from unum.units import km                      # [km] unit definition
 from unum.units import mile                    # [mile] unit definition
 from unum.units import m                       # [m] unit definition
 from unum.units import cm                      # [cm] unit definition
+from unum.units import dm                      # [dm] unit definition
 from unum.units import mm                      # [mm] unit definition
 from unum.units import um                      # [um] unit definition
 from unum.units import kg                      # [kg] unit definition
@@ -50,6 +51,7 @@ mm2=mm**2                                      # [mm2] unit definition
 from unum.units import ha                      # [ha] unit definition
 
 m3=m**3                                        # [m3] unit definition
+dm3=dm**3                                      # [cm3] unit definition
 cm3=cm**3                                      # [cm3] unit definition
 mm3=mm**3                                      # [mm3] unit definition
 
@@ -98,6 +100,8 @@ lbfinch = __Unum.unit('lbfinch', lbf * inch)    # [lbfinch] unit definition
 lbfft = __Unum.unit('lbfft', lbf * ft)          # [lbfft] unit definition
 kipft = __Unum.unit('kipft', kip * ft)          # [kipft] unit definition
 kipinch = __Unum.unit('kipinch', kip * inch)    # [kipinch] unit definition
+
+plf = __Unum.unit('plf', lbf / ft)              # [plf] unit definition 
 
 psi = __Unum.unit('psi', lbf / inch2)           # [psi] unit definition
 ksi = __Unum.unit('ksi', 1E3 * psi)             # [ksi] unit definition
