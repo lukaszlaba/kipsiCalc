@@ -305,6 +305,7 @@ class Calculator(QWidget):
         
     def decode(self, expreson):
         expreson = expreson.replace('^', '**')
+        expreson = expreson.replace(',', '.')
         return expreson 
         
     def add_to_report(self):
