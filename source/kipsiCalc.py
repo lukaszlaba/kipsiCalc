@@ -136,8 +136,9 @@ class Calculator(QWidget):
         self.warnings.setText("-")
         self.warnings.setAlignment(Qt.AlignRight)
         
-        self.autoCheckBox = QCheckBox('Autocalc')
-        self.errorCheckBox = QCheckBox('Error msg')
+        self.autoCheckBox = QCheckBox('autoeval')
+        self.autoreportCheckBox = QCheckBox('auto add to report')
+        self.errorCheckBox = QCheckBox('error msg')
         self.add_to_reportButton = createButton("Add to report",self.add_to_report)
         self.unit_ComboBox = QComboBox()
         self.unit_ComboBox.currentIndexChanged.connect(self.user_unit_changed)
@@ -164,6 +165,7 @@ class Calculator(QWidget):
         self.squareRootButton = createButton("^",self.basicClicked)
         self.brackedopenButton = createButton("(",self.basicClicked)
         self.brackedcloseButton = createButton(")",self.basicClicked)
+        self.evallButton = createButton("Eval", self.evalClicked)
         self.equalButton = createButton("=", self.equalClicked)
         self.infoButton = createButton("App Info", self.info)
 
@@ -175,9 +177,7 @@ class Calculator(QWidget):
         mainLayout.addWidget(self.unit_ComboBox, 1, 17)
         
         mainLayout.addWidget(self.warnings, 1, 0, 1, 10)
-        mainLayout.addWidget(self.autoCheckBox, 3, 17)
-        mainLayout.addWidget(self.errorCheckBox, 4, 17)
-        mainLayout.addWidget(self.add_to_reportButton, 5, 17)
+        mainLayout.addWidget(self.errorCheckBox, 1, 10, 1, 2)
         
         #--numpad
         startcol = 0
@@ -198,7 +198,12 @@ class Calculator(QWidget):
         mainLayout.addWidget(self.squareRootButton, 3 + startrow, 3 + startcol)   # ^
         mainLayout.addWidget(self.brackedopenButton, 4 + startrow, 3 + startcol)  # (
         mainLayout.addWidget(self.brackedcloseButton, 5 + startrow, 3 + startcol) # )
-        mainLayout.addWidget(self.equalButton, 6 + startrow, 0 + startcol, 1, 4)  # =
+        mainLayout.addWidget(self.equalButton, 6 + startrow, 2 + startcol, 1, 2)  # =
+        mainLayout.addWidget(self.evallButton, 6 + startrow, 0 + startcol, 1, 2)  # =
+        mainLayout.addWidget(self.add_to_reportButton, 7 + startrow, 0 + startcol, 1, 4)
+        mainLayout.addWidget(self.autoCheckBox, 8 + startrow, 0 + startcol, 1, 4)
+        mainLayout.addWidget(self.autoreportCheckBox, 9 + startrow, 0 + startcol, 1, 4)
+        
         
         #--units
         startcol = 5
@@ -235,6 +240,8 @@ class Calculator(QWidget):
     def basicClicked(self):
         clickedButton = self.sender()
         content = clickedButton.text()
+        self.display_res.setText('')
+        self.warnings.setText('-')
         self.display.setText(self.display.text() + content)
 
     def unitClicked(self):
@@ -247,16 +254,31 @@ class Calculator(QWidget):
             content = clickedButton.text()
         else:
             content = '*' + clickedButton.text()
+        self.display_res.setText('')
+        self.warnings.setText('-')
         self.display.setText(self.display.text() + content)
 
-    def equalClicked(self):
+    def evalClicked(self):
         self.calculate()
+        if self.autoreportCheckBox.isChecked():
+            self.add_to_report()
+
+    def equalClicked(self):
+        if not self.result is None:
+            self.calculate()
+            if self.autoreportCheckBox.isChecked():
+                self.add_to_report()
+            self.display.setText(self.result_string)
 
     def backspaceClicked(self):
+        self.display_res.setText('')
+        self.warnings.setText('-')
         text = self.display.text()[:-1]
         self.display.setText(text)
 
     def clear(self):
+        self.display_res.setText('0')
+        self.warnings.setText('-')
         self.display.setText('')
 
     def auto_calculate(self):
