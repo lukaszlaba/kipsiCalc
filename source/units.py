@@ -44,7 +44,6 @@ from unum.units import um                      # [um] unit definition
 from unum.units import kg                      # [kg] unit definition
 from unum.units import t                       # [t] unit definition
 
-
 m2=m**2                                        # [m2] unit definition
 cm2=cm**2                                      # [cm2] unit definition
 mm2=mm**2                                      # [mm2] unit definition

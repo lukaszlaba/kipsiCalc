@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #!/usr/bin/env python
 import traceback
-import math
+from math import sin, asin, cos, acos, tan, atan, pi, e, log, log10
 
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QMessageBox
@@ -109,6 +109,8 @@ def createButton(text, member):
 
 #---------------------------------------------------------------------
 
+ans = 0
+
 class Calculator(QWidget):
     NumDigitButtons = 10
     
@@ -136,7 +138,7 @@ class Calculator(QWidget):
         self.warnings.setText("-")
         self.warnings.setAlignment(Qt.AlignRight)
         
-        self.autoCheckBox = QCheckBox('autoeval')
+        self.autoCheckBox = QCheckBox('autoEval')
         self.autoreportCheckBox = QCheckBox('auto add to report')
         self.errorCheckBox = QCheckBox('error msg')
         self.add_to_reportButton = createButton("Add to report",self.add_to_report)
@@ -166,6 +168,7 @@ class Calculator(QWidget):
         self.brackedopenButton = createButton("(",self.basicClicked)
         self.brackedcloseButton = createButton(")",self.basicClicked)
         self.evallButton = createButton("Eval", self.evalClicked)
+        self.ansButton = createButton("ans", self.basicClicked)
         self.equalButton = createButton("=", self.equalClicked)
         self.infoButton = createButton("App Info", self.info)
 
@@ -200,7 +203,8 @@ class Calculator(QWidget):
         mainLayout.addWidget(self.brackedcloseButton, 5 + startrow, 3 + startcol) # )
         mainLayout.addWidget(self.equalButton, 6 + startrow, 2 + startcol, 1, 2)  # =
         mainLayout.addWidget(self.evallButton, 6 + startrow, 0 + startcol, 1, 2)  # =
-        mainLayout.addWidget(self.add_to_reportButton, 7 + startrow, 0 + startcol, 1, 4)
+        mainLayout.addWidget(self.add_to_reportButton, 7 + startrow, 0 + startcol, 1, 2)
+        mainLayout.addWidget(self.ansButton, 7 + startrow, 2 + startcol, 1, 2)
         mainLayout.addWidget(self.autoCheckBox, 8 + startrow, 0 + startcol, 1, 4)
         mainLayout.addWidget(self.autoreportCheckBox, 9 + startrow, 0 + startcol, 1, 4)
         
@@ -236,7 +240,9 @@ class Calculator(QWidget):
         if result_string.endswith('*'):
             result_string = result_string[:-1]
         return result_string
-
+        
+    
+    
     def basicClicked(self):
         clickedButton = self.sender()
         content = clickedButton.text()
@@ -264,11 +270,15 @@ class Calculator(QWidget):
             self.add_to_report()
 
     def equalClicked(self):
+        global ans
         if not self.result is None:
             self.calculate()
             if self.autoreportCheckBox.isChecked():
                 self.add_to_report()
-            self.display.setText(self.result_string)
+            ans = self.result
+            self.display.setText('ans')
+            
+            
 
     def backspaceClicked(self):
         self.display_res.setText('')
@@ -309,9 +319,15 @@ class Calculator(QWidget):
         return expreson 
         
     def add_to_report(self):
-        expresion = self.display.text()
+        ans_string = str(ans)
+        if ans_string.endswith('*'):
+            ans_string = ans_string[:-1]
+        expresion = self.display.text().replace('ans', '(%s)'%ans_string)
+        #---
         result = self.display_res.text()
+        #---
         record = expresion + ' = ' + result
+        #---
         calc.textEditor.toPlainText()
         calc.textEditor.setText(calc.textEditor.toPlainText() + '\n' + record)
     
