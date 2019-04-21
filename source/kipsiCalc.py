@@ -1,6 +1,6 @@
 '''
 --------------------------------------------------------------------------
-Copyright (C) 2016-2017 Lukasz Laba <lukaszlab@o2.pl>
+Copyright (C) 2019 Łukasz Laba (e-mail : lukaszlab@o2.pl)
 
 This file is part of ksipsiCalc.
 ksipsiCalc - simple calculator supporting unit calculations.
@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --------------------------------------------------------------------------
 '''
 
-#!/usr/bin/env python
+
 import traceback
 from math import sin, asin, cos, acos, tan, atan, pi, e, log, log10
 

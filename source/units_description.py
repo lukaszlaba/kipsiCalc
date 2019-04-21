@@ -1,6 +1,6 @@
 '''
 --------------------------------------------------------------------------
-Copyright (C) 2016-2017 Lukasz Laba <lukaszlab@o2.pl>
+Copyright (C) 2019 Łukasz Laba (e-mail : lukaszlab@o2.pl)
 
 This file is part of ksipsiCalc.
 ksipsiCalc - simple calculator supporting unit calculations.
