@@ -2,8 +2,6 @@
 kipsiCalc - Simple calculator supporting unit calculations
 ----------------------------------------------------------
 
-!!!---IT IS UNDER CONSTRUCTION---!!!
-------------------------------------
 
 Changelog
 ---------

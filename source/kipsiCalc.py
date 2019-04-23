@@ -39,20 +39,20 @@ from units_description import unit_description
 #---------------------------------------------------------------------
 
 unit_list = ['kg', 't', 'lb']
-unit_list += ['um', 'mm', 'cm', 'dm', 'm', 'km', 'ft', 'inch', 'yd', 'mile']
-unit_list += ['mm2', 'cm2','m2', 'ha', 'ft2', 'inch2', 'yd2']
-unit_list += ['mm3', 'cm3', 'dm3','m3', 'ft3', 'inch3']
+unit_list += ['um', 'mm', 'cm', 'dm', 'm', 'km', 'inch', 'ft', 'yd', 'mile']
+unit_list += ['mm2', 'cm2','m2', 'ha', 'inch2', 'ft2', 'yd2']
+unit_list += ['mm3', 'cm3', 'dm3','m3', 'inch3', 'ft3']
 unit_list += ['mm4', 'cm4','m4', 'inch4', 'ft4']
 unit_list += ['N', 'kN','lbf', 'kip']
-unit_list += ['Nm', 'kNm','lbfinch', 'lbfft', 'kipft', 'kipinch']
+unit_list += ['Nm', 'kNm','lbfinch', 'lbfft', 'kipinch', 'kipft']
 unit_list += ['Pa', 'kN/m2', 'kPa','MPa', 'bar', 'GPa', 'psi', 'ksi', 'psf', 'ksf']
-unit_list += ['kN/m', 'kN/cm', 'kip/inch', 'lbf/ft', 'plf', 'kip/ft']
-unit_list += ['kN/m3', 'kN/cm3', 'kip/inch3', 'kip/ft3']
+unit_list += ['kN/m', 'lbf/ft', 'plf', 'kip/ft']
+unit_list += ['kN/m3', 'lbf/inch3', 'kip/ft3']
+unit_list += ['kg/m3', 't/m3', 'lb/ft3',]
 unit_list += ['s', 'h']
 
 
-
-user_used_units = ['kg', 'm','m2', 'm3', 'm4', 'kN', 'kNm', 'kPa', 'kN/m', 'kN/m3']
+user_used_units = ['kg', 'm','m2', 'm3', 'm4', 'kN', 'kNm', 'kPa', 'kN/m', 'kN/m3', 'kg/m3', 's']
 
 def are_the_same_unit(val1, val2):
     try:
@@ -63,27 +63,29 @@ def are_the_same_unit(val1, val2):
 
 def unit_color(val):
     if are_the_same_unit(val, kg):
-        colour = "background-color: rgb(245,197,188)"
+        colour = "background-color: rgb(251,155,111)"
     elif are_the_same_unit(val, m):
-        colour = "background-color: rgb(194,238,240)"
+        colour = "background-color: rgb(251,239,112)"
     elif are_the_same_unit(val, m2):
-        colour = "background-color: rgb(124,219,222)"
+        colour = "background-color: rgb(134,250,128)"
     elif are_the_same_unit(val, m3):
-        colour = "background-color: rgb(47,183,188)"
+        colour = "background-color: rgb(129,248,242)"
     elif are_the_same_unit(val, m4):
-        colour = "background-color: rgb(147,200,178)"
+        colour = "background-color: rgb(183,193,251)"
     elif are_the_same_unit(val, N):
-        colour = "background-color: rgb(186,246,152)"
+        colour = "background-color: rgb(250,183,246)"
     elif are_the_same_unit(val, Nm):
-        colour = "background-color: rgb(217,73,233)"
+        colour = "background-color: rgb(251,155,111)"
     elif are_the_same_unit(val, Pa):
-        colour = "background-color: rgb(169,161,222)"
+        colour = "background-color: rgb(251,239,112)"
     elif are_the_same_unit(val, N/m):
-        colour = "background-color: rgb(236,147,187)"
+        colour = "background-color: rgb(134,250,128)"
     elif are_the_same_unit(val, N/m3):
-        colour = "background-color: rgb(235,217,117)"
+        colour = "background-color: rgb(129,248,242)"
+    elif are_the_same_unit(val, kg/m3):
+        colour = "background-color: rgb(183,193,251)"
     else:
-        colour = "background-color: rgb(200,200,200)"
+        colour = "background-color: rgb(250,183,246)"
     return colour
 
     
@@ -138,10 +140,10 @@ class Calculator(QWidget):
         self.warnings.setText("-")
         self.warnings.setAlignment(Qt.AlignRight)
         
-        self.autoCheckBox = QCheckBox('autoEval')
+        self.autoCheckBox = QCheckBox('auto eval')
         self.autoreportCheckBox = QCheckBox('auto add to report')
         self.errorCheckBox = QCheckBox('error msg')
-        self.add_to_reportButton = createButton("Add to report",self.add_to_report)
+        self.add_to_reportButton = createButton("add to report",self.add_to_report)
         self.unit_ComboBox = QComboBox()
         self.unit_ComboBox.currentIndexChanged.connect(self.user_unit_changed)
         self.textEditor = QTextEdit()
@@ -167,10 +169,10 @@ class Calculator(QWidget):
         self.squareRootButton = createButton("^",self.basicClicked)
         self.brackedopenButton = createButton("(",self.basicClicked)
         self.brackedcloseButton = createButton(")",self.basicClicked)
-        self.evallButton = createButton("Eval", self.evalClicked)
+        self.evallButton = createButton("eval", self.evalClicked)
         self.ansButton = createButton("ans", self.basicClicked)
         self.equalButton = createButton("=", self.equalClicked)
-        self.infoButton = createButton("App Info", self.info)
+        self.infoButton = createButton("app info", self.info)
 
         #--------------app layout
         mainLayout = QGridLayout()

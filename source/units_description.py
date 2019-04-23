@@ -25,6 +25,7 @@ description = {}
 
 
 description['kg'] = 'mass: metric kilogram'
+description['t'] = 'mass: metric ton'
 description['lb'] = 'mass: imperial pound'
 
 
@@ -52,21 +53,34 @@ description['yd2'] = 'area: imperial square yard'
 
 description['mm3'] = 'volume: metric cubic millimeter'
 description['cm3'] = 'volume: metric cubic centimeter'
+description['dm3'] = 'volume: metric cubic decimeter'
 description['m3'] = 'volume: metric cubic meter'
 
 description['inch3'] = 'volume: imperial cubic inch'
 description['ft3'] = 'volume: imperial cubic foot'
 
 
+description['N'] = 'force: metric newton'
+description['kN'] = 'force: metric kilonewton'
+
 description['lbf'] = 'force: imperial pound-force'
 description['kip'] = 'force: imperial kilopound-force'
 
+
+description['Nm'] = 'moment of force: metric newton at meter arm'
+description['kNm'] = 'moment of force: metric kilonewton at meter arm'
 
 description['lbfinch'] = 'moment of force: imperial pound-force at inch arm'
 description['lbfft'] = 'moment of force: imperial pound-force at foot arm'
 description['kipft'] = 'moment of force: imperial kip at foot arm'
 description['kipinch'] = 'moment of force: imperial kip at inch arm'
 
+
+description['Pa'] = 'pressure: metric pascal'
+description['kPa'] = 'pressure: metric kilopascal'
+description['MPa'] = 'pressure: metric megapascal'
+description['GPa'] = 'pressure: metric gigapascal'
+description['bar'] = 'pressure: metric bar'
 
 description['psi'] = 'pressure: imperial pound-force per square inch'
 description['ksi'] = 'pressure: imperial kilopound-force per square inch'
