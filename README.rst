@@ -6,7 +6,7 @@ kipsiCalc - Simple calculator supporting unit calculations
 Changelog
 ---------
 
-kipsiCalc 0.2.x (beta stage for testing)
+kipsiCalc 0.2.1 (beta stage for testing)
   - first public release
 
 Description
