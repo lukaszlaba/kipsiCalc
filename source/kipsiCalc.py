@@ -1,6 +1,6 @@
 '''
 --------------------------------------------------------------------------
-Copyright (C) 2019 Łukasz Laba (e-mail : lukaszlab@o2.pl)
+Copyright (C) 2019 Łukasz Laba (e-mail : lukaszlaba@gmail.pl)
 
 This file is part of ksipsiCalc.
 ksipsiCalc - simple calculator supporting unit calculations.
@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 
 import traceback
-from math import sin, asin, cos, acos, tan, atan, pi, e, log, log10
+from math import sin, asin, cos, acos, tan, atan, pi, e, log, log10, sqrt
 
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QMessageBox
@@ -31,7 +31,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QGridLayout, QLayout, QLineEdit,
         QSizePolicy, QToolButton, QWidget, QLabel, QTextBrowser, QTextEdit, QCheckBox, QComboBox)
         
-from appinfo import version, appname, about
+from appinfo import version, appname, about, hidden_features
 from units import *
 
 from units_description import unit_description
@@ -50,7 +50,6 @@ unit_list += ['kN/m', 'lbf/ft', 'plf', 'kip/ft']
 unit_list += ['kN/m3', 'lbf/inch3', 'kip/ft3']
 unit_list += ['kg/m3', 't/m3', 'lb/ft3',]
 unit_list += ['s', 'h']
-
 
 user_used_units = ['kg', 'm','m2', 'm3', 'm4', 'kN', 'kNm', 'kPa', 'kN/m', 'kN/m3', 'kg/m3', 's']
 
@@ -88,7 +87,6 @@ def unit_color(val):
         colour = "background-color: rgb(250,183,246)"
     return colour
 
-    
 #---------------------------------------------------------------------
 
 class Button(QToolButton):
@@ -108,16 +106,18 @@ def createButton(text, member):
     button.clicked.connect(member)
     return button
 
-
 #---------------------------------------------------------------------
 
 ans = 0
 
-class Calculator(QWidget):
+class MAINWINDOW(QWidget):
     NumDigitButtons = 10
     
     def __init__(self, parent=None):
-        super(Calculator, self).__init__(parent)
+        super(MAINWINDOW, self).__init__(parent)
+        
+        #---------
+        self.result = 0
         self.block = False
 
         #---------
@@ -141,15 +141,18 @@ class Calculator(QWidget):
         self.warnings.setAlignment(Qt.AlignRight)
         
         self.autoCheckBox = QCheckBox('auto eval')
+        self.autoCheckBox.setToolTip('if checked, every time you change the expression it will be evaluated')
         self.autoreportCheckBox = QCheckBox('auto add to report')
+        self.autoreportCheckBox.setToolTip('if checked, every time you use |eval| or |=| result will be added to report')
         self.errorCheckBox = QCheckBox('error msg')
+        self.errorCheckBox.setToolTip('if checked, you will get info why ERROR occurred')
         self.add_to_reportButton = createButton("add to report",self.add_to_report)
         self.unit_ComboBox = QComboBox()
         self.unit_ComboBox.currentIndexChanged.connect(self.user_unit_changed)
         self.textEditor = QTextEdit()
 
         self.digitButtons = []
-        for i in range(Calculator.NumDigitButtons):
+        for i in range(self.NumDigitButtons):
             self.digitButtons.append(createButton(str(i),
                     self.basicClicked))
 
@@ -159,6 +162,7 @@ class Calculator(QWidget):
                     self.unitClicked))
 
         self.eButton = createButton("E", self.basicClicked)
+        self.eButton.setToolTip('E-notation (1E2 = 100, 1E-2 = 0.01 ..)')
         self.pointButton = createButton(".", self.basicClicked)
         self.deleteButton = createButton("DEL",self.backspaceClicked)
         self.clearButton = createButton("C", self.clear)
@@ -170,9 +174,14 @@ class Calculator(QWidget):
         self.brackedopenButton = createButton("(",self.basicClicked)
         self.brackedcloseButton = createButton(")",self.basicClicked)
         self.evallButton = createButton("eval", self.evalClicked)
+        self.evallButton.setToolTip('it evaluate expression')
         self.ansButton = createButton("ans", self.basicClicked)
+        self.ansButton.setToolTip('last answer key - it holds the result after the equals (=) key was last pressed')
         self.equalButton = createButton("=", self.equalClicked)
-        self.infoButton = createButton("app info", self.info)
+        self.equalButton.setToolTip('it evaluate expression and move result to ans')
+        self.infoButton = createButton("app info", self.info_app)
+        self.featuresButton = createButton("...", self.info_hidden_features)
+        self.featuresButton.setToolTip('hidden features info')
 
         #--------------app layout
         mainLayout = QGridLayout()
@@ -189,7 +198,7 @@ class Calculator(QWidget):
         startrow = 3
         mainLayout.addWidget(self.deleteButton, 0 + startrow, 0 + startcol, 1, 2)
         mainLayout.addWidget(self.clearButton, 0 + startrow, 2 + startcol, 1, 2)
-        for i in range(1, Calculator.NumDigitButtons): # 1-9
+        for i in range(1, self.NumDigitButtons): # 1-9
             row = ((9 - i) / 3) + 2
             column = ((i - 1) % 3) + 0
             mainLayout.addWidget(self.digitButtons[i], row + startrow, column + startcol)
@@ -207,9 +216,9 @@ class Calculator(QWidget):
         mainLayout.addWidget(self.evallButton, 6 + startrow, 0 + startcol, 1, 2)  # =
         mainLayout.addWidget(self.add_to_reportButton, 7 + startrow, 0 + startcol, 1, 2)
         mainLayout.addWidget(self.ansButton, 7 + startrow, 2 + startcol, 1, 2)
-        mainLayout.addWidget(self.autoCheckBox, 8 + startrow, 0 + startcol, 1, 4)
-        mainLayout.addWidget(self.autoreportCheckBox, 9 + startrow, 0 + startcol, 1, 4)
-        
+        mainLayout.addWidget(self.featuresButton, 8 + startrow, 3 + startcol)
+        mainLayout.addWidget(self.autoCheckBox, 8 + startrow, 0 + startcol, 1, 3)
+        mainLayout.addWidget(self.autoreportCheckBox, 9 + startrow, 0 + startcol, 1, 3)
         
         #--units
         startcol = 5
@@ -242,9 +251,7 @@ class Calculator(QWidget):
         if result_string.endswith('*'):
             result_string = result_string[:-1]
         return result_string
-        
-    
-    
+
     def basicClicked(self):
         clickedButton = self.sender()
         content = clickedButton.text()
@@ -273,15 +280,13 @@ class Calculator(QWidget):
 
     def equalClicked(self):
         global ans
+        self.calculate()
         if not self.result is None:
-            self.calculate()
             if self.autoreportCheckBox.isChecked():
                 self.add_to_report()
             ans = self.result
             self.display.setText('ans')
             
-            
-
     def backspaceClicked(self):
         self.display_res.setText('')
         self.warnings.setText('-')
@@ -318,6 +323,7 @@ class Calculator(QWidget):
     def decode(self, expreson):
         expreson = expreson.replace('^', '**')
         expreson = expreson.replace(',', '.')
+        expreson = expreson.replace(' ', '')
         return expreson 
         
     def add_to_report(self):
@@ -330,29 +336,29 @@ class Calculator(QWidget):
         #---
         record = expresion + ' = ' + result
         #---
-        calc.textEditor.toPlainText()
-        calc.textEditor.setText(calc.textEditor.toPlainText() + '\n' + record)
+        self.textEditor.toPlainText()
+        self.textEditor.setText(self.textEditor.toPlainText() + '\n' + record)
     
     def set_unit_list(self):
         self.block = True
-        calc.unit_ComboBox.clear()
+        self.unit_ComboBox.clear()
         default = None
         native = None
         for unit in unit_list:
                 this_unit = eval(unit)
                 try:
                     this_unit + self.result
-                    calc.unit_ComboBox.addItem(unit)
+                    self.unit_ComboBox.addItem(unit)
                     if unit in user_used_units:
                         default = unit
                     if self.result.asNumber() == self.result/this_unit:
                         native = unit
                 except:
                     pass
-        calc.unit_ComboBox.setCurrentIndex(calc.unit_ComboBox.findText(native))
+        self.unit_ComboBox.setCurrentIndex(self.unit_ComboBox.findText(native))
         self.block = False
         if default:
-            calc.unit_ComboBox.setCurrentIndex(calc.unit_ComboBox.findText(default))
+            self.unit_ComboBox.setCurrentIndex(self.unit_ComboBox.findText(default))
         
     def user_unit_changed(self):
         if not self.block:
@@ -378,17 +384,20 @@ class Calculator(QWidget):
         if not already_exist:
             user_used_units.append(unit)
 
-    def info(self):
+    def info_app(self):
         QMessageBox.about(self, "App Info", about)
+        
+    def info_hidden_features(self):
+        QMessageBox.about(self, "Hidden features", hidden_features)
 
 if __name__ == '__main__':
     import sys
     app = QApplication(sys.argv)
-    calc = Calculator()
-    calc.autoCheckBox.setChecked(True)
-    calc.calculate()
-    calc.textEditor.setText('Here you can write simple report. Use the |Add to report| botton to get results here. Enjoy!')
-    calc.show()
+    myapp = MAINWINDOW()
+    myapp.autoCheckBox.setChecked(False)
+    myapp.calculate()
+    myapp.textEditor.setText('Here you can write simple report. Use the |Add to report| botton to get results here. Enjoy!')
+    myapp.show()
     sys.exit(app.exec_())
     
 '''

@@ -34,7 +34,7 @@ Please find link to windows binaries download below.
 License
 -------
 
-Copyright (C) 2019 Łukasz Laba <lukaszlab@o2.pl>
+Copyright (C) 2019 Łukasz Laba <lukaszlaba@gmail.pl>
 
 ksipsiCalc is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -60,4 +60,4 @@ Code repository: https://github.com/lukaszlaba/kipsiCalc
 
 Windows binaries download: https://github.com/lukaszlaba/kipsiCalc/releases
 
-Contact: Łukasz Laba <lukaszlab@o2.pl>
+Contact: Łukasz Laba <lukaszlaba@gmail.pl>
