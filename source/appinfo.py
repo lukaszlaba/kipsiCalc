@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 --------------------------------------------------------------------------
 '''
 
-version = '0.2.1 (beta)'
+version = '0.2.2(construction) (beta)'
 
 appname = 'kipsiCalc'
 

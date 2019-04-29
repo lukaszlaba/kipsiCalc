@@ -257,11 +257,12 @@ class MAINWINDOW(QWidget):
         content = clickedButton.text()
         self.display_res.setText('')
         self.warnings.setText('-')
-        self.display.setText(self.display.text() + content)
+        self.display.insert(content)
 
     def unitClicked(self):
+        text_before_cursor = self.display.text()[0:self.display.cursorPosition()]
         try:
-            last_sing_in_curent_expresion = self.display.text().replace(' ', '')[-1]
+            last_sing_in_curent_expresion = text_before_cursor.replace(' ', '')[-1]
         except:
             last_sing_in_curent_expresion = None
         clickedButton = self.sender()
@@ -271,7 +272,7 @@ class MAINWINDOW(QWidget):
             content = '*' + clickedButton.text()
         self.display_res.setText('')
         self.warnings.setText('-')
-        self.display.setText(self.display.text() + content)
+        self.display.insert(content)
 
     def evalClicked(self):
         self.calculate()
