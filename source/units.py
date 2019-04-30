@@ -106,5 +106,6 @@ psi = __Unum.unit('psi', lbf / inch2)           # [psi] unit definition
 ksi = __Unum.unit('ksi', 1E3 * psi)             # [ksi] unit definition
 psf = __Unum.unit('psf', lbf / ft2)             # [psf] unit definition
 ksf = __Unum.unit('ksf', 1E3 * psf)             # [ksf] unit definition
+pci = __Unum.unit('pci', lbf / inch3)           # [psi] unit definition
 
 #---------------------------------------------------------------------

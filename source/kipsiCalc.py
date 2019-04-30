@@ -47,7 +47,7 @@ unit_list += ['N', 'kN','lbf', 'kip']
 unit_list += ['Nm', 'kNm','lbfinch', 'lbfft', 'kipinch', 'kipft']
 unit_list += ['Pa', 'kN/m2', 'kPa','MPa', 'bar', 'GPa', 'psi', 'ksi', 'psf', 'ksf']
 unit_list += ['kN/m', 'lbf/ft', 'plf', 'kip/ft']
-unit_list += ['kN/m3', 'lbf/inch3', 'kip/ft3']
+unit_list += ['kN/m3', 'lbf/inch3', 'pci', 'kip/ft3']
 unit_list += ['kg/m3', 't/m3', 'lb/ft3',]
 unit_list += ['s', 'h']
 
