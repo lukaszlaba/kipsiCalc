@@ -291,8 +291,7 @@ class MAINWINDOW(QWidget):
     def backspaceClicked(self):
         self.display_res.setText('')
         self.warnings.setText('-')
-        text = self.display.text()[:-1]
-        self.display.setText(text)
+        myapp.display.backspace()
 
     def clear(self):
         self.display_res.setText('0')

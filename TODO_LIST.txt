@@ -1,0 +1,9 @@
+------------------------------------------------------------------
+TODO:
+* add short and long tone unit
+* imperial length result as sum of feet and inch (2ft + 3inch)
+* possible to input imperial length ad 2'  +  11''
+
+------------------------------------------------------------------
+DONE:
+* editing expression in place where cursor is
