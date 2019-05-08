@@ -396,7 +396,7 @@ if __name__ == '__main__':
     myapp = MAINWINDOW()
     myapp.autoCheckBox.setChecked(False)
     myapp.calculate()
-    myapp.textEditor.setText('Here you can write simple report. Use the |Add to report| botton to get results here. Enjoy!')
+    myapp.textEditor.setText('Here you can write simple report. Use the |Add to report| button to get results here. Enjoy!')
     myapp.show()
     sys.exit(app.exec_())
     
