@@ -7,4 +7,5 @@ TODO:
 ------------------------------------------------------------------
 DONE:
 * editing expression in place where cursor is
+* inserting result to report where cursor is
 * pci unit added - subgrade modulus same as lbf/inch3

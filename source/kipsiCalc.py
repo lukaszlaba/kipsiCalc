@@ -336,8 +336,7 @@ class MAINWINDOW(QWidget):
         #---
         record = expresion + ' = ' + result
         #---
-        self.textEditor.toPlainText()
-        self.textEditor.setText(self.textEditor.toPlainText() + '\n' + record)
+        myapp.textEditor.insertPlainText(record)
     
     def set_unit_list(self):
         self.block = True
@@ -394,7 +393,7 @@ if __name__ == '__main__':
     import sys
     app = QApplication(sys.argv)
     myapp = MAINWINDOW()
-    myapp.autoCheckBox.setChecked(False)
+    myapp.autoCheckBox.setChecked(True)
     myapp.calculate()
     myapp.textEditor.setText('Here you can write simple report. Use the |Add to report| button to get results here. Enjoy!')
     myapp.show()
