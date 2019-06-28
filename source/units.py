@@ -72,8 +72,6 @@ kPa = __Unum.unit('kPa', 1E3 * Pa)             # [kPa] unit definition
 MPa = __Unum.unit('MPa', 1E6 * Pa)             # [MPa] unit definition
 GPa = __Unum.unit('GPa', 1E9 * Pa)             # [MPa] unit definition
 
-from unum.units import s                       # [s] unit definition
-
 #---------------------------------------------------------------------
 #Imperial units
 
@@ -101,11 +99,14 @@ kipft = __Unum.unit('kipft', kip * ft)          # [kipft] unit definition
 kipinch = __Unum.unit('kipinch', kip * inch)    # [kipinch] unit definition
 
 plf = __Unum.unit('plf', lbf / ft)              # [plf] unit definition 
+klf = __Unum.unit('klf', kip / ft)              # [plf] unit definition 
 
 psi = __Unum.unit('psi', lbf / inch2)           # [psi] unit definition
 ksi = __Unum.unit('ksi', 1E3 * psi)             # [ksi] unit definition
 psf = __Unum.unit('psf', lbf / ft2)             # [psf] unit definition
 ksf = __Unum.unit('ksf', 1E3 * psf)             # [ksf] unit definition
-pci = __Unum.unit('pci', lbf / inch3)           # [psi] unit definition
+
+pci = __Unum.unit('pci', lbf / inch3)           # [pci] unit definition
+pcf = __Unum.unit('pcf', lbf / ft3)             # [pcf] unit definition
 
 #---------------------------------------------------------------------

@@ -82,15 +82,16 @@ description['MPa'] = 'pressure: metric megapascal'
 description['GPa'] = 'pressure: metric gigapascal'
 description['bar'] = 'pressure: metric bar'
 
+description['plf'] = 'force per length: imperial pound-force per foot'
+description['klf'] = 'force per length: imperial kilopound-force per foot'
+
 description['psi'] = 'pressure: imperial pound-force per square inch'
 description['ksi'] = 'pressure: imperial kilopound-force per square inch'
 description['psf'] = 'pressure: imperial pound-force per square foot'
 description['ksf'] = 'pressure: imperial kilopound-force per square foot'
 
-
-description['plf'] = 'force per length: imperial pound-force per foot'
-
-description['pci'] = 'subgrade modulus: imperial pound-force per cubic foot'
+description['pci'] = 'subgrade modulus: imperial pound-force per cubic inch'
+description['pcf'] = 'subgrade modulus: imperial pound-force per cubic foot'
 
 
 description['s'] = 'time: second'
