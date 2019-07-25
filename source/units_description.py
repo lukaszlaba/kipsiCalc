@@ -23,11 +23,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 description = {}
 
-
 description['kg'] = 'mass: metric kilogram'
-description['t'] = 'mass: metric ton'
+description['t'] = 'mass: metric tonne'
 description['lb'] = 'mass: imperial pound'
-
+description['UKton'] = 'mass: imperial UK long ton'
+description['USton'] = 'mass: imperial US short ton'
 
 description['um'] = 'length: metric micrometer'
 description['mm'] = 'length: metric millimeter'
@@ -50,7 +50,6 @@ description['inch2'] = 'area: imperial square inch'
 description['ft2'] = 'area: imperial square foot'
 description['yd2'] = 'area: imperial square yard'
 
-
 description['mm3'] = 'volume: metric cubic millimeter'
 description['cm3'] = 'volume: metric cubic centimeter'
 description['dm3'] = 'volume: metric cubic decimeter'
@@ -59,13 +58,11 @@ description['m3'] = 'volume: metric cubic meter'
 description['inch3'] = 'volume: imperial cubic inch'
 description['ft3'] = 'volume: imperial cubic foot'
 
-
 description['N'] = 'force: metric newton'
 description['kN'] = 'force: metric kilonewton'
 
 description['lbf'] = 'force: imperial pound-force'
 description['kip'] = 'force: imperial kilopound-force'
-
 
 description['Nm'] = 'moment of force: metric newton at meter arm'
 description['kNm'] = 'moment of force: metric kilonewton at meter arm'
@@ -74,7 +71,6 @@ description['lbfinch'] = 'moment of force: imperial pound-force at inch arm'
 description['lbfft'] = 'moment of force: imperial pound-force at foot arm'
 description['kipft'] = 'moment of force: imperial kip at foot arm'
 description['kipinch'] = 'moment of force: imperial kip at inch arm'
-
 
 description['Pa'] = 'pressure: metric pascal'
 description['kPa'] = 'pressure: metric kilopascal'
@@ -92,7 +88,6 @@ description['ksf'] = 'pressure: imperial kilopound-force per square foot'
 
 description['pci'] = 'subgrade modulus: imperial pound-force per cubic inch'
 description['pcf'] = 'subgrade modulus: imperial pound-force per cubic foot'
-
 
 description['s'] = 'time: second'
 description['h'] = 'time: hour'

@@ -38,7 +38,7 @@ from units_description import unit_description
 
 #---------------------------------------------------------------------
 
-unit_list = ['kg', 't', 'lb']
+unit_list = ['kg', 't', 'lb', 'UKton', 'USton']
 unit_list += ['um', 'mm', 'cm', 'dm', 'm', 'km', 'inch', 'ft', 'yd', 'mile']
 unit_list += ['mm2', 'cm2','m2', 'ha', 'inch2', 'ft2', 'yd2']
 unit_list += ['mm3', 'cm3', 'dm3','m3', 'inch3', 'ft3']

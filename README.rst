@@ -7,6 +7,16 @@ kipsiCalc - Simple calculator supporting unit calculations
 Changelog
 ---------
 
+kipsiCalc 0.2.2 (beta stage for testing)
+  - editing expression in place where cursor is
+  - inserting result to report where cursor is
+  - pci unit added - subgrade modulus same as lbf/inch3
+  - pcf unit added - subgrade modulus same as lbf/ft3
+  - klf unit added - force per length same as kip/ft
+  - UKton unit added - UK long ton
+  - USton unit added - US short ton
+  - gn constant added - standard gravity
+
 kipsiCalc 0.2.1 (beta stage for testing)
   - first public release
 

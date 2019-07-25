@@ -90,6 +90,9 @@ inch4 = inch**4                                 # [inch4] unit definition
 ft4 = ft**4                                     # [inch4] unit definition
 
 lb = __Unum.unit('lb', 0.45359237 * kg)         # [lb] unit definition
+UKton = __Unum.unit('UKton', 2240. * lb)         # [lb] unit definition
+USton = __Unum.unit('USton', 2000. * lb)         # [lb] unit definition
+
 lbf = __Unum.unit('lbf', 4.4482216152605 * N)   # [lbf] unit definition
 kip = __Unum.unit('kip', 1E3 * lbf)             # [kip] unit definition
 
@@ -110,3 +113,5 @@ pci = __Unum.unit('pci', lbf / inch3)           # [pci] unit definition
 pcf = __Unum.unit('pcf', lbf / ft3)             # [pcf] unit definition
 
 #---------------------------------------------------------------------
+
+gn = 9.80665 * m / s**2

@@ -57,6 +57,7 @@ atan(x) - return the arc tangent of x, in radians
 Constants:
 pi - the mathematical constant π = 3.141592…
 e - the mathematical constant e = 2.718281…
+gn - standard gravity gn = 9.80665 * m/s^2
 -------------------------------------------
 Power and logarithmic functions:
 log(x[, base]) - with one argument, return the natural 
