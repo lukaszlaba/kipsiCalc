@@ -42,6 +42,8 @@ After the Python and needed library was installed, just run kipsCalc.py file.
 There is also windows binaries available. Just download it and run exe file.
 Please find link to windows binaries download below.
 
+https://github.com/lukaszlaba/kipsiCalc/releases
+
 License
 -------
 
