@@ -110,6 +110,8 @@ def createButton(text, member):
 
 ans = 0
 
+report_default_text = 'Here you can write simple report. Use the |Add to report| button to get results here. Enjoy!'
+
 class MAINWINDOW(QWidget):
     NumDigitButtons = 10
     
@@ -327,6 +329,9 @@ class MAINWINDOW(QWidget):
         return expreson 
         
     def add_to_report(self):
+        if self.textEditor.toPlainText() == report_default_text:
+            self.textEditor.clear()
+        #----
         ans_string = str(ans)
         if ans_string.endswith('*'):
             ans_string = ans_string[:-1]
@@ -334,9 +339,12 @@ class MAINWINDOW(QWidget):
         #---
         result = self.display_res.text()
         #---
-        record = expresion + ' = ' + result
+        if self.textEditor.toPlainText() == '':
+            record = expresion + ' = ' + result
+        else:
+             record =  '\n' + expresion + ' = ' + result   
         #---
-        myapp.textEditor.insertPlainText(record)
+        self.textEditor.insertPlainText(record)
     
     def set_unit_list(self):
         self.block = True
@@ -395,7 +403,9 @@ if __name__ == '__main__':
     myapp = MAINWINDOW()
     myapp.autoCheckBox.setChecked(True)
     myapp.calculate()
-    myapp.textEditor.setText('Here you can write simple report. Use the |Add to report| button to get results here. Enjoy!')
+    #---
+    myapp.textEditor.setText(report_default_text)
+    #----
     myapp.show()
     sys.exit(app.exec_())
     
