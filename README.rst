@@ -7,6 +7,11 @@ kipsiCalc - Simple calculator supporting unit calculations
 Changelog
 ---------
 
+kipsiCalc 0.2.3 (beta stage for testing)
+  - add to report in new line fixed
+  - imperial length result as sum of feet and inch (2ft + 3inch)
+  - app wep page open when app info button pushed
+
 kipsiCalc 0.2.2 (beta stage for testing)
   - editing expression in place where cursor is
   - inserting result to report where cursor is

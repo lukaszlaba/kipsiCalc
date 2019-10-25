@@ -24,6 +24,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import traceback
 from math import sin, asin, cos, acos, tan, atan, pi, e, log, log10, sqrt
+import webbrowser
 
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QMessageBox
@@ -35,6 +36,7 @@ from appinfo import version, appname, about, hidden_features
 from units import *
 
 from units_description import unit_description
+from imperial_lengh_format import imperial_lengh_format
 
 #---------------------------------------------------------------------
 
@@ -50,6 +52,8 @@ unit_list += ['kN/m', 'lbf/ft', 'plf', 'kip/ft', 'klf']
 unit_list += ['kN/m3', 'lbf/inch3', 'pci', 'kip/ft3' ,'pcf']
 unit_list += ['kg/m3', 't/m3', 'lb/ft3',]
 unit_list += ['s', 'h']
+
+extra_units_list = ['ft_inch'] #those units has no button
 
 user_used_units = ['kg', 'm','m2', 'm3', 'm4', 'kN', 'kNm', 'kPa', 'kN/m', 'kN/m3', 'kg/m3', 's']
 
@@ -249,7 +253,11 @@ class MAINWINDOW(QWidget):
     
     @property
     def result_string(self):
-        result_string = str(self.result).replace(' ','')
+        if self.unit_ComboBox.currentText()=='ft_inch':
+            result_string = imperial_lengh_format(self.result).replace(' ','')
+        else:
+            result_string = str(self.result).replace(' ','')
+        #---
         if result_string.endswith('*'):
             result_string = result_string[:-1]
         return result_string
@@ -351,7 +359,7 @@ class MAINWINDOW(QWidget):
         self.unit_ComboBox.clear()
         default = None
         native = None
-        for unit in unit_list:
+        for unit in unit_list + extra_units_list:
                 this_unit = eval(unit)
                 try:
                     this_unit + self.result
@@ -393,6 +401,7 @@ class MAINWINDOW(QWidget):
 
     def info_app(self):
         QMessageBox.about(self, "App Info", about)
+        webbrowser.open('https://github.com/lukaszlaba/kipsiCalc')
         
     def info_hidden_features(self):
         QMessageBox.about(self, "Hidden features", hidden_features)

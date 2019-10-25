@@ -77,6 +77,7 @@ GPa = __Unum.unit('GPa', 1E9 * Pa)             # [MPa] unit definition
 
 inch = __Unum.unit('inch', 0.0254 * m)          # [in] unit definition
 ft = __Unum.unit('ft', 12. * inch)              # [ft] unit definition
+ft_inch = ft                                    # [ft] unit definition with format like 1ft 30inch 1/8inch
 yd = __Unum.unit('yd', 3. * ft)                 # [yd] unit definition
 
 inch2 = inch**2                                 # [inch2] unit definition
