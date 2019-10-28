@@ -2,6 +2,8 @@
 kipsiCalc - Simple calculator supporting unit calculations
 ----------------------------------------------------------
 
+Download binaries for Windows: https://github.com/lukaszlaba/kipsiCalc/releases
+
 .. image:: docs/interface.png
 
 Changelog
