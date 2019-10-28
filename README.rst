@@ -2,7 +2,7 @@
 kipsiCalc - Simple calculator supporting unit calculations
 ----------------------------------------------------------
 
-Download binaries for Windows: https://github.com/lukaszlaba/kipsiCalc/releases
+`>>Download for Windows<< <https://github.com/lukaszlaba/kipsiCalc/releases>`_
 
 .. image:: docs/interface.png
 
