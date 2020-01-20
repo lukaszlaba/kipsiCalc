@@ -2,6 +2,8 @@
 kipsiCalc - Simple calculator supporting unit calculations
 ----------------------------------------------------------
 
+`Download for Windows <https://github.com/lukaszlaba/kipsiCalc/releases>`_
+
 .. image:: docs/interface.png
 
 Changelog
@@ -57,6 +59,11 @@ License
 -------
 
 Copyright (C) 2019-2020 Łukasz Laba <lukaszlaba@gmail.pl>
+
+ksipsiCalc is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
 ksipsiCalc is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
