@@ -112,6 +112,7 @@ ksf = __Unum.unit('ksf', 1E3 * psf)             # [ksf] unit definition
 
 pci = __Unum.unit('pci', lbf / inch3)           # [pci] unit definition
 pcf = __Unum.unit('pcf', lbf / ft3)             # [pcf] unit definition
+kcf = __Unum.unit('kcf', kip / ft3)             # [kcf] unit definition
 
 #---------------------------------------------------------------------
 

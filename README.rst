@@ -7,6 +7,10 @@ kipsiCalc - Simple calculator supporting unit calculations
 Changelog
 ---------
 
+kipsiCalc 0.2.4 (beta stage for testing)
+  - clipboard input and output
+  - kcf unit added
+
 kipsiCalc 0.2.3 (beta stage for testing)
   - add to report in new line fixed
   - imperial length result as sum of feet and inch (2ft + 3inch)
@@ -52,7 +56,7 @@ https://github.com/lukaszlaba/kipsiCalc/releases
 License
 -------
 
-Copyright (C) 2019 Łukasz Laba <lukaszlaba@gmail.pl>
+Copyright (C) 2019-2020 Łukasz Laba <lukaszlaba@gmail.pl>
 
 ksipsiCalc is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of

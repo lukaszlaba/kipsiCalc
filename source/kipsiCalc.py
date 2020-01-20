@@ -31,6 +31,7 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QGridLayout, QLayout, QLineEdit,
         QSizePolicy, QToolButton, QWidget, QLabel, QTextBrowser, QTextEdit, QCheckBox, QComboBox)
+from PyQt5.QtGui import QClipboard
         
 from appinfo import version, appname, about, hidden_features
 from units import *
@@ -49,7 +50,7 @@ unit_list += ['N', 'kN','lbf', 'kip']
 unit_list += ['Nm', 'kNm','lbfinch', 'lbfft', 'kipinch', 'kipft']
 unit_list += ['Pa', 'kN/m2', 'kPa','MPa', 'bar', 'GPa', 'psi', 'ksi', 'psf', 'ksf']
 unit_list += ['kN/m', 'lbf/ft', 'plf', 'kip/ft', 'klf']
-unit_list += ['kN/m3', 'lbf/inch3', 'pci', 'kip/ft3' ,'pcf']
+unit_list += ['kN/m3', 'lbf/inch3', 'kip/ft3' ,'pci' ,'pcf', 'kcf']
 unit_list += ['kg/m3', 't/m3', 'lb/ft3',]
 unit_list += ['s', 'h']
 
@@ -186,6 +187,12 @@ class MAINWINDOW(QWidget):
         self.equalButton = createButton("=", self.equalClicked)
         self.equalButton.setToolTip('it evaluate expression and move result to ans')
         self.infoButton = createButton("app info", self.info_app)
+        self.cb1Button = createButton("cb_res>>", self.copy_res_to_clipboard)
+        self.cb1Button.setToolTip('copy only result text to clipboard')
+        self.cb2Button = createButton("cb_eq>>", self.copy_equ_to_clipboard)
+        self.cb2Button.setToolTip('copy all equation text to clipboard')
+        self.cbinButton = createButton("<<cb_in", self.insert_form_clipboard)
+        self.cbinButton.setToolTip('insert expresion from clipboard')
         self.featuresButton = createButton("...", self.info_hidden_features)
         self.featuresButton.setToolTip('hidden features info')
 
@@ -241,7 +248,12 @@ class MAINWINDOW(QWidget):
             self.unitButtons[i].setToolTip(unit_description(unit_list[i]))
             
         #---info
-        mainLayout.addWidget(self.infoButton, 7, 17)
+        mainLayout.addWidget(self.infoButton, 10, 17)
+        
+        #---copy to cliboard
+        mainLayout.addWidget(self.cbinButton, 4, 17)
+        mainLayout.addWidget(self.cb1Button, 6, 17)
+        mainLayout.addWidget(self.cb2Button, 5, 17)
 
         #---text editor
         mainLayout.addWidget(self.textEditor, 20, 0, 1, 18)        
@@ -313,6 +325,10 @@ class MAINWINDOW(QWidget):
             self.calculate()
             
     def calculate(self):
+        #expresion = self.display.text()
+        #formated_expresion = self.format_expresion(expresion)
+        #myapp.display.setText(formated_expresion)
+        #---------------
         expresion = self.display.text()
         expresion = self.decode(expresion)
         try:
@@ -328,24 +344,32 @@ class MAINWINDOW(QWidget):
             self.display_res.setText("0")
             if self.errorCheckBox.isChecked():
                 self.warnings.setText('-')
-        self.set_unit_list()
+        self.set_unit_list()     
+        
         
     def decode(self, expreson):
         expreson = expreson.replace('^', '**')
         expreson = expreson.replace(',', '.')
-        expreson = expreson.replace(' ', '')
-        return expreson 
+        expreson = expreson.replace(' ', '')        
+        return expreson
+        
+    def get_expresion_str(self):
+        ans_string = str(ans)
+        if ans_string.endswith('*'):
+            ans_string = ans_string[:-1]
+        expresion = self.display.text().replace('ans', '(%s)'%ans_string)
+        return expresion
+        
+    def get_result_str(self):
+        result = self.display_res.text()
+        return result
         
     def add_to_report(self):
         if self.textEditor.toPlainText() == report_default_text:
             self.textEditor.clear()
         #----
-        ans_string = str(ans)
-        if ans_string.endswith('*'):
-            ans_string = ans_string[:-1]
-        expresion = self.display.text().replace('ans', '(%s)'%ans_string)
-        #---
-        result = self.display_res.text()
+        expresion = self.get_expresion_str()
+        result = self.get_result_str()
         #---
         if self.textEditor.toPlainText() == '':
             record = expresion + ' = ' + result
@@ -398,7 +422,29 @@ class MAINWINDOW(QWidget):
                 pass
         if not already_exist:
             user_used_units.append(unit)
+    
+    def copy_res_to_clipboard(self):
+        result = self.get_result_str()
+        text = result
+        cb = QApplication.clipboard()
+        cb.setText(text)
 
+    def copy_equ_to_clipboard(self):
+        expresion = self.get_expresion_str()
+        result = self.get_result_str()
+        text = expresion + ' = ' + result
+        cb = QApplication.clipboard()
+        cb.setText(text)
+
+    def insert_form_clipboard(self):
+        cb = QApplication.clipboard()
+        cbtext = cb.text()
+        # if there is = thern split ant take only first part
+        # also remowe whitespaces from left and right ends
+        expresion = cb.text().split('=')[0].lstrip().rstrip()
+        # now set the expresion
+        myapp.display.setText(expresion)
+        
     def info_app(self):
         QMessageBox.about(self, "App Info", about)
         webbrowser.open('https://github.com/lukaszlaba/kipsiCalc')

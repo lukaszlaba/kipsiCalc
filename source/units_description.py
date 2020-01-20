@@ -88,6 +88,7 @@ description['ksf'] = 'pressure: imperial kilopound-force per square foot'
 
 description['pci'] = 'subgrade modulus: imperial pound-force per cubic inch'
 description['pcf'] = 'subgrade modulus: imperial pound-force per cubic foot'
+description['kcf'] = 'subgrade modulus: imperial kilopound-force per cubic foot'
 
 description['s'] = 'time: second'
 description['h'] = 'time: hour'
