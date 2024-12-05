@@ -57,7 +57,7 @@ https://github.com/lukaszlaba/kipsiCalc/releases
 License
 -------
 
-Copyright (C) 2019-2020 Łukasz Laba <lukaszlaba@gmail.pl>
+Copyright (C) 2019-2020 Łukasz Laba <lukaszlaba@gmail.com>
 
 ksipsiCalc is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -88,4 +88,4 @@ Code repository: https://github.com/lukaszlaba/kipsiCalc
 
 Windows binaries download: https://github.com/lukaszlaba/kipsiCalc/releases
 
-Contact: Łukasz Laba <lukaszlaba@gmail.pl>
+Contact: Łukasz Laba <lukaszlaba@gmail.com>
